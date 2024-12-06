@@ -1,0 +1,7 @@
+RewriteEngine On
+
+# Don't rewrite requests for CSS, JS, or image files
+RewriteCond %{REQUEST_URI} !\.(css|scss|js|jpg|jpeg|png|gif|ico)$
+
+# Route all other requests to index.php
+RewriteRule ^(.*)$ index.php [L]
