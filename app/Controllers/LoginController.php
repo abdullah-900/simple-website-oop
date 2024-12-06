@@ -12,7 +12,7 @@ class LoginController{
                 $validator=new Validator($username,$password,"");
                 if ($validator->validateLogin()) {
                     $_SESSION["is_Login_success"]=true;
-                    header("Location: ../Login");
+                    header("Location: ../notes");
                 }else{
                     $_SESSION["is_Login_success"]=false;
                     $_SESSION["Login_errors"]=$validator->geterrors();
