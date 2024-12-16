@@ -1,7 +1,5 @@
 <?php 
 declare (strict_types=1);
-include_once "././utils/Validator.php";
-include_once "./config/config_session.php";
 class SignupController{
  public function handleSignup(){
     if ($_SERVER['REQUEST_METHOD']==="POST"){
