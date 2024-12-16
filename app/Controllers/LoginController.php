@@ -1,8 +1,7 @@
 <?php
 declare (strict_types=1);
-include_once "././utils/Validator.php";
-require_once "./config/config_session.php";
 class LoginController{
+
     public function handleLogin() {
         
         if ($_SERVER['REQUEST_METHOD']==="POST") {
@@ -12,6 +11,7 @@ class LoginController{
                 $validator=new Validator($username,$password,"");
                 if ($validator->validateLogin()) {
                     $_SESSION["is_Login_success"]=true;
+                    $_SESSION["user_id"]= $validator->get_user_data()["id"];
                     header("Location: ../notes");
                 }else{
                     $_SESSION["is_Login_success"]=false;
