@@ -10,7 +10,7 @@ class User extends Dbh {
         $this->password=$password;
         $this->email=$email;
     }
-protected function get_user_data() {
+public function get_user_data() {
 $query='SELECT * from users where username=:username;';
 $stmt=$this->query($query,[":username"=>$this->username]);
 $result=$stmt->fetch(PDO::FETCH_ASSOC);
@@ -29,7 +29,6 @@ public function Signup():bool {
     ":email" => $this->email
    ]);
   } catch(PDOException $e){ 
-    error_log('Error during user signup: ' . $e->getMessage(), 3, '../logs/errors.log');
     return false;
 }
     }
