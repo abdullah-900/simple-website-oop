@@ -1,6 +1,3 @@
-<?php
-require_once "./config/config_session.php";
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -39,20 +36,13 @@ require_once "./config/config_session.php";
         <button type="submit" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Sign in</button>
       </div>
       <?php
-if (isset($_SESSION["is_Login_success"]) && $_SESSION["is_Login_success"]===true) {
-?>
- <div class='text-green-600 text-center'>
-  <p>you succssfully logged in</p>
-    </div>;
-<?php
-   unset($_SESSION["is_Login_success"]);
-}elseif (isset($_SESSION["Login_errors"]) && $_SESSION["is_Login_success"]===false)  {
+if (isset($_SESSION["Login_errors"]) && $_SESSION["is_Login_success"]===false)  {
  $errors=$_SESSION["Login_errors"];
  unset($_SESSION["Login_errors"]);
  foreach($errors as $error) {
 echo  "<div class='text-red-600 text-center'>";
 echo"<p>";
-echo $error ;
+echo htmlspecialchars($error) ;
 echo "</p>";
   echo "</div>";
  }
