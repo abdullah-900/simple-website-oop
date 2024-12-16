@@ -1,6 +1,3 @@
-<?php
-require_once "./config/config_session.php";
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
