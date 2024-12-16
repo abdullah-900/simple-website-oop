@@ -3,7 +3,7 @@ declare (strict_types=1);
 require_once "./app/Models/User.php";
 class Validator extends User {
     private array $errors=[];
-    private function is_empty(array $requiredfields) {
+    public function is_empty(array $requiredfields) {
         foreach ($requiredfields as $field) {
             if (empty($field)) {
                 $this->errors[]="please fill all fields";
@@ -52,6 +52,14 @@ class Validator extends User {
                     return false;
                 }
                 }
+
+                public static function checkStringLength($string ,$min ,$max) {
+                    if (strlen($string)>=$min && strlen($string)<$max) {
+                        return true;
+                    }else {
+                        return false;
+                    }
+                }
             public function geterrors() {
                 return $this->errors;
             }
@@ -79,4 +87,6 @@ class Validator extends User {
                     return false;
                 }
             }
+
+
 }
