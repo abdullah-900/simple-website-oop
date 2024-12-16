@@ -4,19 +4,30 @@ class Router {
     private $uri;
     private $method;
     private $routes;
-
-    public function __construct($Routes) {
+    private $sessionid;
+    public function __construct(array $Routes) {
         $this->uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         $this->method = $_SERVER['REQUEST_METHOD'];
         $this->routes=$Routes["routes"];
+        if (isset($_SESSION["user_id"])) {
+            $this->sessionid=$_SESSION["user_id"];
+        }
     }
 public function Route(){
     try {
 // these are regular views only getting pages
-if (array_key_exists($this->uri,$this->routes) && $this->method === "GET" ) {
-require_once $this->routes[$this->uri];
+if (array_key_exists($this->uri,$this->routes) && $this->method === "GET") {
+    require_once $this->routes[$this->uri][0];
+    if (isset($this->routes[$this->uri][1])) {
+        $info=pathinfo($this->routes[$this->uri][0]);
+        $classname=$info["filename"];
+        $class=new $classname();
+        call_user_func([ $class, $this->routes[$this->uri][1]]);
+    }
 // here i can instaniate controller classes and call methods on them
-}elseif(array_key_exists($this->uri,$this->routes) && $this->method === "POST") {
+}
+    // here i can instaniate controller classes and call methods on them
+elseif(array_key_exists($this->uri,$this->routes) && $this->method === "POST") {
     require_once $this->routes[$this->uri][0];
     $info=pathinfo($this->routes[$this->uri][0]);
     $classname=$info["filename"];
@@ -24,11 +35,11 @@ require_once $this->routes[$this->uri];
     call_user_func([ $class, $this->routes[$this->uri][1]]);
 }
 else{
-    require_once "./app/Views/notfound.php";
+    abort(Responses::notfound);
 }
 
     } catch (Exception $e) {
-        error_log("exception:" . $e->getMessage(),3,'./logs/erros.log');
+       die("exception:" . $e->getMessage());
     }
    
 }
