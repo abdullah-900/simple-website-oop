@@ -9,7 +9,7 @@ class Router {
     private $sessionid;
     public function __construct() {
         $this->uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-        $this->method = $_SERVER['REQUEST_METHOD'];
+        $this->method = $_POST["_method"]?? $_SERVER['REQUEST_METHOD'];
         if (isset($_SESSION["user_id"])) {
             $this->sessionid=$_SESSION["user_id"];
         }
@@ -24,7 +24,7 @@ public function post($uri,$controller,$function) {
     $this->addRoute($uri,$controller,'POST',$function);
     }
     public function delete($uri,$controller,$function) {
-        $this->addRoute($uri,$controller,'delete',$function);
+        $this->addRoute($uri,$controller,'DELETE',$function);
         }
         public function put($uri,$controller,$function) {
             $this->addRoute($uri,$controller,'PUT',$function);
@@ -47,15 +47,15 @@ public function addRoute($uri,$controller,$method,$function) {
 
 public function Route() {
     foreach ($this->routes as $route) {
-        if($this->uri===$route['uri'] && $route['method']==='GET' && $route["function"]!=='') {
+        if($this->uri===$route['uri'] && $route['method']===$this->method && $route["function"]!=='') {
             require_once  base_path($route['controller']);
             $info=pathinfo($route['controller']);
             $classname=$info["filename"];
             $class=new $classname();
             call_user_func([ $class, $route["function"]]);
-        }elseif ($this->uri===$route['uri'] && $route['method']==='GET') {
+        }elseif ($this->uri===$route['uri'] && $route['method']===$this->method) {
             require_once  base_path($route['controller']);
-        }elseif($this->uri===$route['uri'] && $route['method']==='POST') {
+        }elseif($this->uri===$route['uri'] && $route['method']===$this->method) {
             require_once  base_path($route['controller']);
             $info=pathinfo($route['controller']);
             $classname=$info["filename"];
