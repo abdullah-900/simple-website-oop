@@ -1,6 +1,6 @@
 <?php
 declare (strict_types=1);
-require_once "./config/Dbh.php";
+use Core\Dbh;
 class User extends Dbh {
     protected $username;
     protected $password;
@@ -13,7 +13,7 @@ class User extends Dbh {
 public function get_user_data() {
 $query='SELECT * from users where username=:username;';
 $stmt=$this->query($query,[":username"=>$this->username]);
-$result=$stmt->fetch(PDO::FETCH_ASSOC);
+    $result=$stmt->fetch(PDO::FETCH_ASSOC);
 return $result;
 }
 
