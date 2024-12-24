@@ -45,7 +45,7 @@ if (isset($_SESSION["notes"]) && is_array($_SESSION["notes"])) {
     echo "</a>";
     ?>
     <form action="/notes/delete" method="POST">
-      <input type="hidden" name="_method" value="delete">
+      <input type="hidden" name="_method" value="DELETE">
       <input value=<?php echo $note[0]?> name="noteId" type="hidden">
 <button type="submit">
 <svg  class="cursor-pointer" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20" viewBox="0 0 48 48">
