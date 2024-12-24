@@ -1,6 +1,8 @@
 <?php
 declare (strict_types=1);
-require_once "./app/Models/Notes.php";
+use Core\Validator;
+require_once BASE_PATH ."./core/functions.php";
+use function Core\base_path;
 class NotesController extends Notes {
 
 
@@ -12,7 +14,7 @@ if (is_array($notes)) {
     $message="no notes added yet";
     $_SESSION["notes"]=$message;
 }
-require "./app/Views/notes.php";
+require_once base_path("./app/Views/notes/index.php");;
 }
 
 public function addNote() {
@@ -28,7 +30,6 @@ public function addNote() {
             if (!Validator::checkStringLength($note,1,1000)) {
                 $notes_errors["note"]="note must be no more than 1000 characters";
             }
-            var_dump($notes_errors);
             if(empty($notes_errors)) {
                 $query='INSERT INTO notes (user_id,note_title,note_content) VALUES (:user_id,:note_title,:note_content)  ;';
                 $this->query($query,[":user_id"=>$this->userId,":note_title"=>$notetitle,":note_content"=>$note]);
@@ -37,6 +38,20 @@ public function addNote() {
                 $_SESSION["notes_errors"]=$notes_errors;
                 header("Location: ../notes");
             }
+        } catch (Exception $e) {
+            die("query failed" . $e->getMessage());
+        }
+    }else {
+        header("Location: ../notes");
+        die();
+    }
+}
+public function deleteNote() {
+    if ($_SERVER["REQUEST_METHOD"]==="POST" && isset($this->userId)) {
+        try {
+        $noteId=$_POST["noteId"];
+       $this->delNote($noteId);
+          header("Location: ../notes");
         } catch (Exception $e) {
             die("query failed" . $e->getMessage());
         }
