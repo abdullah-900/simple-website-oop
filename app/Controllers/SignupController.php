@@ -1,5 +1,6 @@
 <?php 
 declare (strict_types=1);
+use Core\Validator;;
 class SignupController{
  public function handleSignup(){
     if ($_SERVER['REQUEST_METHOD']==="POST"){
