@@ -1,6 +1,6 @@
 <?php
 declare (strict_types=1);
-require_once "./config/Dbh.php";
+use Core\Dbh;
 Class Notes extends Dbh{
     protected $userId;
  public function __construct(){
@@ -17,6 +17,10 @@ if (isset($_SESSION["user_id"])) {
 
     }
 
-    
+    protected function delNote($noteId) {
+        $query="DELETE FROM notes where note_id=:NoteId;";
+       $stmt= $this->query($query,[":NoteId"=>$noteId]);
+       return $stmt;
+    }
     
 }
