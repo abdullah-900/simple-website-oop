@@ -5,7 +5,7 @@ use Exception;
 class Router {
     private $uri;
     private $method;
-    private $routes=[];
+   private $routes=[];
     private $sessionid;
     public function __construct() {
         $this->uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -15,62 +15,71 @@ class Router {
         }
     }
 
-
-
-public function get($uri,$controller,$function='') {
-$this->addRoute($uri,$controller,'GET',$function);
+ public function getter() {
+    return $this->routes;
+ }
+public function get($uri,$controller,$allowedfor,$function='') {
+$this->addRoute($uri,$controller,'GET',$function,$allowedfor);
 }
-public function post($uri,$controller,$function) {
-    $this->addRoute($uri,$controller,'POST',$function);
+public function post($uri,$controller,$allowedfor,$function) {
+    $this->addRoute($uri,$controller,'POST',$function,$allowedfor);
     }
-    public function delete($uri,$controller,$function) {
-        $this->addRoute($uri,$controller,'DELETE',$function);
+    public function delete($uri,$controller,$allowedfor,$function) {
+        $this->addRoute($uri,$controller,'DELETE',$function,$allowedfor);
         }
-        public function put($uri,$controller,$function) {
-            $this->addRoute($uri,$controller,'PUT',$function);
+        public function put($uri,$controller,$allowedfor,$function) {
+            $this->addRoute($uri,$controller,'PUT',$function,$allowedfor);
             }
-            public function patch($uri,$controller,$function) {
-                $this->addRoute($uri,$controller,'PATCH',$function);
+            public function patch($uri,$controller,$allowedfor,$function) {
+                $this->addRoute($uri,$controller,'PATCH',$function,$allowedfor);
                 }
              
 
 
 
-public function addRoute($uri,$controller,$method,$function) {
+public function addRoute($uri,$controller,$method,$function='',$allowedfor='') {
     $this->routes[]= [
               "uri"=>$uri,
               "controller"=>$controller,
               "method"=>$method,
               "function"=>$function,
+              "allowedfor"=>$allowedfor,
+             
       ];
 }
 
-public function Route() {
-    foreach ($this->routes as $route) {
-        if($this->uri===$route['uri'] && $route['method']===$this->method && $route["function"]!=='') {
-            require_once  base_path($route['controller']);
-            $info=pathinfo($route['controller']);
-            $classname=$info["filename"];
-            $class=new $classname();
-            call_user_func([ $class, $route["function"]]);
-        }elseif ($this->uri===$route['uri'] && $route['method']===$this->method) {
-            require_once  base_path($route['controller']);
-        }elseif($this->uri===$route['uri'] && $route['method']===$this->method) {
-            require_once  base_path($route['controller']);
-            $info=pathinfo($route['controller']);
-            $classname=$info["filename"];
-            $class=new $classname();
-            call_user_func([ $class, $route["function"]]);
-        }
-    }
+
+
+
+private function nav ($controller,$function='') {
+    require_once  base_path($controller);
+    $info=pathinfo($controller);
+    $classname=$info["filename"];
+    $class=new $classname();
+    call_user_func([ $class, $function]);
 }
 
 
-
-
-
-
-
+public function Route() {
+    foreach ($this->routes as $route) {
+        $checkuriandmethod=$this->uri===$route['uri'] && $route['method']===$this->method;
+        if (isset($this->sessionid) && $checkuriandmethod && $route['allowedfor']==='user') {
+            $this->nav($route['controller'],$route['function']);
+        }elseif(isset($this->sessionid) && $checkuriandmethod && $route['allowedfor']==='guest') {
+            header("Location: ../notes");
+        }
+        
+        if($checkuriandmethod && !isset($this->sessionid) && $route['allowedfor']==='guest') {
+            if ($route['function']) {
+                $this->nav($route['controller'],$route['function']);
+            }else{
+                require_once  base_path($route["controller"]);
+            }
+        }elseif($checkuriandmethod && !isset($this->sessionid) && $route['allowedfor']==='user') {
+            header("Location: ../");
+        }
+    }
+}
 
 
 
