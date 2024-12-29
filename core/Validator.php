@@ -2,6 +2,7 @@
 declare (strict_types=1);
 namespace Core;
 use User;
+use function Core\logger;
 require_once BASE_PATH . "./app/Models/User.php";
 class Validator extends User {
     private array $errors=[];
@@ -15,6 +16,19 @@ class Validator extends User {
             }
         }
     }
+
+
+    
+    public static function is_field_empty(array $requiredfields) {
+        foreach ($requiredfields as $field) {
+            if (empty($field)) {
+                return true;
+            }else {
+                return false;
+            }
+        }
+    }
+    
     
     private function is_username_taken() {
     $userdata=$this->get_user_data();
