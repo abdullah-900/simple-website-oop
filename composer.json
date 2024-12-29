@@ -1,0 +1,9 @@
+{
+    "name": "abdal/simple-website-oop",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Core\\": "core/"
+        }
+    }
+}
