@@ -10,3 +10,9 @@ function abort($response=404) {
     }
     die();
 }
+
+function logger($var) {
+    $logfilpath=base_path('./logs/runtime.log');
+    file_put_contents($logfilpath,  var_export($var) . PHP_EOL, FILE_APPEND);
+
+}
