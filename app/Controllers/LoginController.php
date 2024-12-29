@@ -1,6 +1,7 @@
 <?php
 declare (strict_types=1);
 use Core\Validator;
+use function Core\base_path;
 class LoginController{
 
     public function handleLogin() {
@@ -11,8 +12,8 @@ class LoginController{
                $password=$_POST["password"];
                 $validator=new Validator($username,$password,"");
                 if ($validator->validateLogin()) {
-                    $_SESSION["is_Login_success"]=true;
                     $_SESSION["user_id"]= $validator->get_user_data()["id"];
+                    $_SESSION["is_Login_success"]=true;
                     header("Location: ../notes");
                 }else{
                     $_SESSION["is_Login_success"]=false;
